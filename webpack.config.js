@@ -5,30 +5,32 @@ const _MiniCssExtractPlugin = require('mini-css-extract-plugin');
 //   chunkFilename: '[id].css',
 // });
 module.exports = function(_env, argv) {
-  const isProduction = argv.mode === "production";
+  const isProduction = argv.mode === 'production';
   const isDevelopment = !isProduction;
 
   return {
+    devtool: isDevelopment && 'cheap-module-source-map',
     entry: {
+      // index: './src/index.js',
       app: {import: './src/App.js', filename: 'pages/[name]/[name].js'},
       // shared: ['react', 'react-dom'],
       home: {
         import: './src/pages/HomePage.jsx',
         filename: 'pages/[name]/[name].js',
-        // dependOn: 'shared',
       },
       about: {
         import: './src/pages/AboutPage.jsx',
         filename: 'pages/[name]/[name].js',
-        // dependOn: 'shared',
       },
-
     },
     output: {
       path: path.join(__dirname, '/dist'), // the bundle output path
       filename: 'bundle.js', // the name of the bundle
+      // filename: 'assets/js/[name].[contenthash:8].js',
+      // publicPath: '/',
     },
     plugins: [
+      //new HtmlWebpackPlugin({template: 'src/index.html'}),
       new HtmlWebpackPlugin({
         template: 'src/index.html',
         filename: 'pages/app/index.html',
@@ -58,9 +60,14 @@ module.exports = function(_env, argv) {
       rules: [
         {
           test: /\.(js|jsx)$/, // .js and .jsx files
-          exclude: /node_modules/, // excluding the node_modules folder
+          exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              cacheCompression: false,
+              envName: isProduction ? 'production' : 'development',
+            },
           },
         },
         {
@@ -83,4 +90,4 @@ module.exports = function(_env, argv) {
       ],
     },
   };
-}
+};
