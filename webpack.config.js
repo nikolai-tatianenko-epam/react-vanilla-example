@@ -1,9 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const _MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const MiniCssExtractPlugin = new _MiniCssExtractPlugin({
-//   chunkFilename: '[id].css',
-// });
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports = function(_env, argv) {
   const isProduction = argv.mode === 'production';
   const isDevelopment = !isProduction;
@@ -46,10 +44,12 @@ module.exports = function(_env, argv) {
         filename: 'pages/about/index.html',
         chunks: ['about'],
       }),
-      new _MiniCssExtractPlugin(
-        {filename: '[name]/[name].css'},
-      ),
-    ],
+      isProduction &&
+      new MiniCssExtractPlugin({
+        filename: "pages/[name]/[name][contenthash:8].css",
+        chunkFilename: "pages/[name]/[name][contenthash:8].chunk.css"
+      })
+   ].filter(Boolean),
     devServer: {
       port: 3030, // you can change the port
     },
@@ -72,7 +72,10 @@ module.exports = function(_env, argv) {
         },
         {
           test: /\.(sa|sc|c)ss$/, // styles files
-          use: ['style-loader', 'css-loader', 'sass-loader'],
+          use: [
+               isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+            'css-loader',
+            'sass-loader'],
         },
         // {
         //   test: /\.(sa|sc|c)ss$/, // styles files
