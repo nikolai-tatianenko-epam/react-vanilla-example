@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = function(_env, argv) {
   const isProduction = argv.mode === 'production';
@@ -46,10 +46,10 @@ module.exports = function(_env, argv) {
       }),
       isProduction &&
       new MiniCssExtractPlugin({
-        filename: "pages/[name]/[name][contenthash:8].css",
-        chunkFilename: "pages/[name]/[name][contenthash:8].chunk.css"
-      })
-   ].filter(Boolean),
+        filename: 'pages/[name]/[name][contenthash:8].css',
+        chunkFilename: 'pages/[name]/[name][contenthash:8].chunk.css',
+      }),
+    ].filter(Boolean),
     devServer: {
       port: 3030, // you can change the port
     },
@@ -71,25 +71,29 @@ module.exports = function(_env, argv) {
           },
         },
         {
-          test: /\.(sa|sc|c)ss$/, // styles files
-          use: [
-               isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-            'css-loader',
-            'sass-loader'],
-        },
-        // {
-        //   test: /\.(sa|sc|c)ss$/, // styles files
-        //   use: [
-        //     isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-        //     'css-loader', 'sass-loader',
-        //   ],
-        // },
-        {
 
           test: /\.(png|woff|woff2|eot|ttf|svg)$/, // to import images and fonts
           loader: 'url-loader',
           options: {limit: false},
         },
+        {
+          test: /\.(png|jpg|gif)$/i,
+          use: {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              name: 'static/media/[name].[hash:8].[ext]',
+            },
+          },
+        },
+        {
+          test: /\.(sa|sc|c)ss$/, // styles files
+          use: [
+            isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+            'css-loader',
+            'sass-loader'],
+        },
+
       ],
     },
   };

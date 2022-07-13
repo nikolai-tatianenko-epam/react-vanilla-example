@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "serve": "webpack serve --mode development",
-    "build": "NODE_ENV='production' && webpack --mode production"
+    "build": "NODE_ENV='production' && webpack --mode production",
+    "build:watch": "NODE_ENV='production' && webpack --mode production --watch"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "@babel/preset-env": "^7.18.6",
     "@babel/preset-react": "^7.18.6",
     "@babel/runtime": "^7.18.6",
+    "@svgr/webpack": "^6.2.1",
     "babel-loader": "^8.2.5",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "css-loader": "^6.7.1",
